@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -29,8 +30,80 @@
             </form>
         </div>
 
-    </div> 
+    </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"> </script>
+    <script>
+        // 入口函数
+        $(function () {
+            // 需求:获取用户输入的账号和密码，发送ajax请求
+            // 给登录按钮注册点击事件
+            $('.input_sub').on('click', function (e) {
+                e.preventDefault()
+                // 1.获取用户输入的账号和密码
+                var ursrname = $('.input_txt').val().trim()
+                var password = $('.input_pass').val().trim()
+                // 验证输入的是否为空
+                if (ursrname == "" || password == "") {
+                    // alert('你输入的账号为空');
+                    $('.modal-body').text('你输入的账号或秘密为空')
+                    $('#myModal').modal({
+                        keyboard: true
+                    })
+                    return;
+                }
+                // 2.发送ajax请求
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8080/admin/user/login',
+                    data: {
+                        username: ursrname,
+                        password: password
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+
+                        if (backData.code == 200) {
+                            // 3.请求成功就跳转到首页，失败就提醒客户
+                            window.location.href = 'index.html'
+
+                        } else {
+                            $('.modal-body').text('你输入的账号或秘密错误')
+                            $('#myModal').modal({
+                                keyboard: true
+                            })
+                        }
+
+                    }
+
+                })
+
+
+            })
+        })
+
+    </script>
 </body>
 
 </html>
